@@ -1,9 +1,7 @@
 import networkx as nx 
 from matplotlib import pyplot as plt
 from itertools import product 
-
-class diGraph:
-    def __init__(self):
+class diGraph: def __init__(self):
         self.g = nx.DiGraph()
 
     def add_node(self,id,fn,args,mutable_find,mutable_ccpar):
@@ -34,7 +32,7 @@ class diGraph:
     def congruent(self,id1,id2):
         n1 = self.NODE(id1)
         n2 = self.NODE(id2)
-        if (n1["fn"] is not n2["fn"]) and len(n1["args"]) is not len(n2["args"]): return False
+        if (n1["fn"] is not n2["fn"]) or (len(n1["args"]) is not len(n2["args"])): return False
         for i in range(len(n1["args"])):
             val1= self.find(n1["args"][i]) 
             val2= self.find(n2["args"][i]) 
@@ -57,11 +55,6 @@ class diGraph:
         else: 
             return False
 
-    def decision_procedure(self):
-
-
-
-
     def draw(self):
         try:
             plt.tight_layout()
@@ -76,6 +69,35 @@ class diGraph:
      
     def check_DAG(self):
         nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input
+
+    def solve(self):
+        """
+        Returns: SAT or UNSAT
+
+        Procedure: 
+            1. Construct the initial DAG for the subterm set SF .
+            2. For i ∈ {1, . . . , m}, merge Si Ti .
+            3. If find Si = find Ti for some i ∈ {m + 1, . . . , n}, return UNSAT.
+            4. Otherwise (if find Si != find Ti for all i ∈ {m+1, . . . , n}) return SAT.
+        """
+        for eq in self.equalities:
+            print(eq,self.find(eq[0]),self.find(eq[1]))
+            self.merge(eq[0],eq[1])
+        for ineq in self.inequalities:
+            val1,val2 =  self.find(ineq[0]),self.find(ineq[1])
+            print(f"Ineq: {ineq} -> {val1} and {val2} ")
+            if val1 != val2: # TODO : check this condition
+                print("UNSAT")
+                return "UNSAT"
+        print("SAT")
+        return "SAT"
+
+class cd: 
+    def parse_and_load_data(self,file):
+        data = open("input.txt","r").read().splitlines()
+        graphs = []
+        for d in data:
+            clauses = d.split(",")
 
 
 def main():
