@@ -1,8 +1,13 @@
 import networkx as nx 
 from matplotlib import pyplot as plt
 from itertools import product 
-class diGraph: def __init__(self):
+class diGraph: 
+
+    def __init__(self,SF):
         self.g = nx.DiGraph()
+        self.equalities = []
+        self.inequalities = []
+         
 
     def add_node(self,id,fn,args,mutable_find,mutable_ccpar):
         self.g.add_node(id,{ "fn":fn, "args":args, "mutable_find":mutable_find,"mutable_ccpar":mutable_ccpar})
@@ -71,22 +76,13 @@ class diGraph: def __init__(self):
         nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input
 
     def solve(self):
-        """
-        Returns: SAT or UNSAT
-
-        Procedure: 
-            1. Construct the initial DAG for the subterm set SF .
-            2. For i ∈ {1, . . . , m}, merge Si Ti .
-            3. If find Si = find Ti for some i ∈ {m + 1, . . . , n}, return UNSAT.
-            4. Otherwise (if find Si != find Ti for all i ∈ {m+1, . . . , n}) return SAT.
-        """
         for eq in self.equalities:
             print(eq,self.find(eq[0]),self.find(eq[1]))
             self.merge(eq[0],eq[1])
         for ineq in self.inequalities:
             val1,val2 =  self.find(ineq[0]),self.find(ineq[1])
             print(f"Ineq: {ineq} -> {val1} and {val2} ")
-            if val1 != val2: # TODO : check this condition
+            if val1 == val2: # If the inequality is not correct it's UNSAT 
                 print("UNSAT")
                 return "UNSAT"
         print("SAT")
@@ -94,10 +90,6 @@ class diGraph: def __init__(self):
 
 class cd: 
     def parse_and_load_data(self,file):
-        data = open("input.txt","r").read().splitlines()
-        graphs = []
-        for d in data:
-            clauses = d.split(",")
 
 
 def main():
