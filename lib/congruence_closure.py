@@ -1,7 +1,6 @@
 import networkx as nx 
 import sys
 from matplotlib import pyplot as plt
-from smt_parse import smt_parser
 from itertools import product 
 
 class CC_DAG: 
@@ -11,21 +10,6 @@ class CC_DAG:
         self.equalities = []
         self.inequalities = []
          
-    def build_graph(self,atoms):
-        id_counter = 0
-        for atom in atoms: 
-            print(atom)
-
-    def save_equations(self,equations):
-        equalities,inequalities = [],[]
-        for val in equations:
-            # NB: Only checks if the ! operator is only used for the inequalities,
-            # Should be drastically improved
-            if "!" not in val: equalities.append(val)
-            else: inequalities.append(val)
-            # NB: manca salvarle come coppie dei loro id
-        pass 
-
     def add_node(self,id,fn,args,mutable_find,mutable_ccpar):
         self.g.add_node(id,fn=fn, args=args, mutable_find=mutable_find,mutable_ccpar=mutable_ccpar)
                 
@@ -105,13 +89,4 @@ class CC_DAG:
         print("SAT")
         return "SAT"
 
-def main():
-    solver = CC_DAG()
-    parser = smt_parser()
-    print (sys.argv)
-    equations,atoms = parser.parse(sys.argv[1])
-    solver.build_graph(atoms)
-    solver.save_equations(equations)
 
-if __name__ == "__main__":
-    main()
