@@ -1,5 +1,4 @@
 import networkx as nx 
-import sys
 from matplotlib import pyplot as plt
 from itertools import product 
 

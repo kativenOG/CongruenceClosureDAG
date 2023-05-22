@@ -18,27 +18,34 @@ def parse_equations(equations,atom_dict):
         else: equalities.append(processed_res) 
     return equalities,inequalities 
 
-def rec_build(id,cc_dag,brackets_indeces,pos):
-    pass
+class parse_atoms:
+    def __init__(self,cc_dag):
+        self.atom_dict = {}
+        self.cc_dag = cc_dag
+        self.id = 1 #id's start from 1, like in Bradley Manna  
 
-def parse_atoms(atoms,cc_dag):
-    atom_dict = {} # NOTATION: "function": id
-    incr_id = 1 # id's start from 1, like in Bradley Manna  
-    for atom in atoms: 
-        # funzione esterna 
-        if atom_dict.get(atom,"default") == "default":
-            atom_dict[atom] = copy.copy(incr_id)
-            incr_id+=1
-        # Generating Brackets list for Parsing 
-        bi = [i for i,c in enumerate(atom) if c == "("]   
-        rbi = [i for i,c in enumerate(atom) if c == ")"]   
-        rbi = reversed(rbi)
-        brackets_indeces = list(zip(bi,rbi))
+    def rec_build(self,atom,brackets_indeces,pos): # Da finire bro
+        particle = atom[brackets_indeces[pos][0]:brackets_indeces[pos][1]] 
+        if particle not in self.atom_dict:
+            self.atom_dict[atom] = copy.copy(self.id)
+            self.id+=1
 
-        # Recursivly building graph from atom
-        incr_id,_= rec_build(incr_id,cc_dag,brackets_indeces,0)
-        # incr_id = max(cc_dag.nodes) 
-    return atom_dict
+    def parse(self,atoms):
+        # atom_dict = {} # NOTATION: "function": id
+        self.id = 1 # id's start from 1, like in Bradley Manna  
+        for atom in atoms: 
+            # funzione esterna 
+            if self.atom_dict.get(atom,"default") is "default":
+                self.atom_dict[atom] = copy.copy(self.id)
+                self.id+=1
+            # Generating Brackets list for Parsing 
+            bi = [i for i,c in enumerate(atom) if c == "("]   
+            rbi = [i for i,c in enumerate(atom) if c == ")"]   
+            rbi = reversed(rbi)
+            brackets_indeces = list(zip(bi,rbi))
+            # Recursivly building graph from atom
+            self.rec_build(atom,brackets_indeces,0)
+
 
 # test = "f(f(f(f(a))))"
-# parse_atoms(test)
+# atom_parser =  atom_parser(atoms,)
