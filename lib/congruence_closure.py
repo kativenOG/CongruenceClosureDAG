@@ -3,8 +3,7 @@ from matplotlib import pyplot as plt
 from itertools import product 
 
 class CC_DAG: 
-
-    def __init__(self):
+    def __init__(self): 
         self.g = nx.DiGraph()
         self.equalities = []
         self.inequalities = []
@@ -61,16 +60,16 @@ class CC_DAG:
         else: 
             return False
 
-    def draw(self):
-        try:
-            plt.tight_layout()
-            nx.draw_networkx(self.g, arrows=True)
-            plt.savefig("dac.png", format="PNG")
-            plt.clf()
-            return
-        except:
-            print("ERROR")
-            return 
+    # def draw(self):
+    #     try:
+    #         plt.tight_layout()
+    #         nx.draw_networkx(self.g, arrows=True)
+    #         plt.savefig("dac.png", format="PNG")
+    #         plt.clf()
+    #         return
+    #     except:
+    #         print("ERROR")
+    #         return 
 
     def check_DAG(self):
         nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input

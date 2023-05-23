@@ -1,6 +1,7 @@
 import copy
 from pyparsing import *
 
+# TODO: check on inequalities is stupid and needs to be improved 
 def parse_equations(equations,atom_dict):
     operand = Word(alphas) 
     eqopt  = Literal("<=>")
@@ -19,33 +20,66 @@ def parse_equations(equations,atom_dict):
     return equalities,inequalities 
 
 class parse_atoms:
+
     def __init__(self,cc_dag):
         self.atom_dict = {}
         self.cc_dag = cc_dag
         self.id = 1 #id's start from 1, like in Bradley Manna  
 
-    def rec_build(self,atom,brackets_indeces,pos): # Da finire bro
-        particle = atom[brackets_indeces[pos][0]:brackets_indeces[pos][1]] 
-        if particle not in self.atom_dict:
-            self.atom_dict[atom] = copy.copy(self.id)
-            self.id+=1
-
+    # TODO: tutto dc (Da finire Bro)
+    def rec_build(self,fn,args): 
+        real_args = []
+        c_len,counter = len(args),0
+        while counter < c_len:
+            try:
+                if isinstance(args[counter], str) and (not isinstance(args[counter +1], str)):
+                    counter+=2
+                    pass
+                elif isinstance(args[counter], str):
+                    real_args.append([])
+                    counter+=1
+                    pass
+            except: # last element is a literal and there 
+                print("Last Element, cant look further")
+        
     def parse(self,atoms):
-        # atom_dict = {} # NOTATION: "function": id
         self.id = 1 # id's start from 1, like in Bradley Manna  
         for atom in atoms: 
-            # funzione esterna 
-            if self.atom_dict.get(atom,"default") is "default":
+            index = atom.find("(")
+            og_id = 0 # Salva id funzione esterna per aggiungere a padre dopo 
+            # Self Dict contiene tutto il nome al contrario del parametro fn del node
+            if self.atom_dict.get(atom,"default") is "default": 
                 self.atom_dict[atom] = copy.copy(self.id)
                 self.id+=1
-            # Generating Brackets list for Parsing 
-            bi = [i for i,c in enumerate(atom) if c == "("]   
-            rbi = [i for i,c in enumerate(atom) if c == ")"]   
-            rbi = reversed(rbi)
-            brackets_indeces = list(zip(bi,rbi))
-            # Recursivly building graph from atom
-            self.rec_build(atom,brackets_indeces,0)
+                og_id = copy.copy(self.id)
+            else:
+                og_id = self.atom_dict[atom]
+
+            pruned_atom = atom[index:]
+            dissected_atom = nestedExpr('(',')').parseString(pruned_atom).asList()
+             
+            
+test = "(f(f(f(a,b),f(c))))"
+print(nestedExpr('(',')').parseString(test).asList())
 
 
-# test = "f(f(f(f(a))))"
-# atom_parser =  atom_parser(atoms,)
+# Old implementation, main function
+# Generating Brackets list for Parsing 
+# bi = [i for i,c in enumerate(atom) if c == "("]   
+# rbi = [i for i,c in enumerate(atom) if c == ")"]   
+# rbi = reversed(rbi)
+# brackets_indeces = list(zip(bi,rbi))
+# Recursivly building graph from atom
+# self.rec_build(atom,brackets_indeces,0)
+
+# RECURSIVE FUNCTION
+# if pos == int(len(brackets_indeces)-1):
+#     return 
+# else:
+#     og_particle = atom[brackets_indeces[pos][0]:brackets_indeces[pos][1]] 
+#     particles = og_particle.split(",")
+#     for particle in particles:
+#         if particle not in self.atom_dict:
+#             self.atom_dict[atom] = copy.copy(self.id)
+#             self.id+=1
+
