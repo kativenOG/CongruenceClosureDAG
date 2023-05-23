@@ -1,18 +1,39 @@
 import networkx as nx 
-from matplotlib import pyplot as plt
 from itertools import product 
+# from matplotlib import pyplot as plt
 
 class CC_DAG: 
+
     def __init__(self): 
         self.g = nx.DiGraph()
         self.equalities = []
         self.inequalities = []
          
-    def add_node(self,id,fn,args,mutable_find,mutable_ccpar):
+    def add_node(self,id,fn,args = []):
+        mutable_ccpar = set()
+        # mutable_ccpar.add(father)
+        mutable_find = []
+        mutable_find.append(id)
         self.g.add_node(id,fn=fn, args=args, mutable_find=mutable_find,mutable_ccpar=mutable_ccpar)
                 
+    # PRINT NODE 
+    def node_string(self,id): 
+        target = self.g.nodes[id]
+        if len(target["args"]) > 0:
+            return "{}".format(target["fn"])
+        else:
+            args_str = ""
+            for arg in target["args"]:
+                args_str = args_str + self.node_string(arg)
+            return "{}({})".format(target["fn"],args_str)
+
+    def update_node(self,id,mutable_find=None,mutable_ccpar=None):
+        target = self.g.nodes[id]
+        if mutable_find != None: target["mutable_find"] = target["mutable_find"] + mutable_find
+        if mutable_ccpar!= None: target["mutable_ccpar"].update(mutable_ccpar)
+        # self.g.add_node(id,fn=fn, args=args, mutable_find=mutable_find,mutable_ccpar=mutable_ccpar)
+
     def NODE(self,id):
-        # target = dict(filter(lambda x: x if x[id] == id else False, self.g.nodes(data=True)))
         attr_dict = self.g.nodes[id]
         return attr_dict 
 
@@ -60,17 +81,6 @@ class CC_DAG:
         else: 
             return False
 
-    # def draw(self):
-    #     try:
-    #         plt.tight_layout()
-    #         nx.draw_networkx(self.g, arrows=True)
-    #         plt.savefig("dac.png", format="PNG")
-    #         plt.clf()
-    #         return
-    #     except:
-    #         print("ERROR")
-    #         return 
-
     def check_DAG(self):
         nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input
 
@@ -87,4 +97,14 @@ class CC_DAG:
         print("SAT")
         return "SAT"
 
+    # def draw(self):
+    #     try:
+    #         plt.tight_layout()
+    #         nx.draw_networkx(self.g, arrows=True)
+    #         plt.savefig("dac.png", format="PNG")
+    #         plt.clf()
+    #         return
+    #     except:
+    #         print("ERROR")
+    #         return 
 

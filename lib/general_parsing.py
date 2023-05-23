@@ -1,5 +1,6 @@
 import copy
 from pyparsing import *
+from congruence_closure import CC_DAG
 
 # TODO: check on inequalities is stupid and needs to be improved 
 def parse_equations(equations,atom_dict):
@@ -26,45 +27,81 @@ class parse_atoms:
         self.cc_dag = cc_dag
         self.id = 1 #id's start from 1, like in Bradley Manna  
 
-    # TODO: tutto dc (Da finire Bro)
     def rec_build(self,fn,args): 
         real_args = []
         c_len,counter = len(args),0
+        # TODO: MANCA CASO IN  ARGS HA UN SOLO ARGOMENTO 
+
+        # Cycle through args
         while counter < c_len:
             try:
+                # Argument is a function with arguments
                 if isinstance(args[counter], str) and (not isinstance(args[counter +1], str)):
+                    ids = []
+                    for arg in args[counter+1]:
+                        ids.append(self.rec_build(args[counter],arg))
                     counter+=2
-                    pass
+                # Argument is a literal with NO arguments
                 elif isinstance(args[counter], str):
-                    real_args.append([])
+                    check_id =  self.atom_dict.get(args[counter],"default")
+                    if check_id is "default":  # CREATE SINGLE LITERAL ELEMENT
+                        self.id+=1
+                        real_args.append(copy.copy(self.id))
+                        self.cc_dag.add_node(id=copy.copy(self.id),fn=args[counter],args=[])
+                        real_args.append(copy.copy(self.id))
+                    else: real_args.append(check_id)
                     counter+=1
-                    pass
-            except: # last element is a literal and there 
+            # Last Element is a Literal and there are no more arguments to args 
+            except: 
                 print("Last Element, cant look further")
+                check_id =  self.atom_dict.get(args[counter],"default")
+                if check_id is "default":  # CREATE SINGLE LITERAL ELEMENT
+                    self.id+=1
+                    real_args.append(copy.copy(self.id))
+                    self.cc_dag.add_node(id=copy.copy(self.id),fn=args[counter],args=[])
+                    real_args.append(copy.copy(self.id))
+                else: real_args.append(check_id)
+                counter+=1
+            
+        iter_string = ""
+        for instance in list(map(lambda x: self.cc_dag.node_string(x),real_args)):
+            iter_string= iter_string + instance +","
+        iter_string = iter_string[:-1]
+        real_node = fn + "(" + iter_string  + ")"
+            
+        check_id =  self.atom_dict.get(real_node,"default")
+        if check_id is "default":  # CREATE SINGLE LITERAL ELEMENT
+            self.id+=1
+            self.cc_dag.add_node(id=copy.copy(self.id),fn=fn,args=real_args)
+            return copy.copy(self.id)
+        return check_id
         
     def parse(self,atoms):
-        self.id = 1 # id's start from 1, like in Bradley Manna  
         for atom in atoms: 
-            index = atom.find("(")
-            og_id = 0 # Salva id funzione esterna per aggiungere a padre dopo 
-            # Self Dict contiene tutto il nome al contrario del parametro fn del node
-            if self.atom_dict.get(atom,"default") is "default": 
-                self.atom_dict[atom] = copy.copy(self.id)
-                self.id+=1
-                og_id = copy.copy(self.id)
-            else:
-                og_id = self.atom_dict[atom]
-
-            pruned_atom = atom[index:]
-            dissected_atom = nestedExpr('(',')').parseString(pruned_atom).asList()
+            atom = "(" + atom + ")"
+            if self.atom_dict.get(atom,"default") is "default": # dissect the atom if is not already in the dict
+                dissected_atom = nestedExpr('(',')').parseString(test).asList()
+                self.rec_build(dissected_atom)
              
-            
-test = "(f(f(f(a,b),f(c))))"
-print(nestedExpr('(',')').parseString(test).asList())
+    # TODO: add parenths to each node in the graph 
+    def add_ccpar(self):
+        pass 
+
+test = ["f(f(f(f(ac,bc),c)))"]
+solver = CC_DAG()
+parser = parse_atoms(solver)
+parser.parse(test)
+# test = "(" + test + ")"
+# TESTING 
+# test = "(f(f(f(a,b),f(c))))"
+# print(nestedExpr('(',')').parseString(test).asList())
 
 
-# Old implementation, main function
-# Generating Brackets list for Parsing 
+
+
+
+# OLD IMPLEMENTATION
+# main function Generating Brackets list for Parsing 
 # bi = [i for i,c in enumerate(atom) if c == "("]   
 # rbi = [i for i,c in enumerate(atom) if c == ")"]   
 # rbi = reversed(rbi)
