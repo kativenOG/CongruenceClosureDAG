@@ -20,8 +20,7 @@ class CC_DAG:
     def add_node(self,id,fn,args):
         mutable_ccpar = set()
         # mutable_ccpar.add(father)
-        mutable_find = []
-        mutable_find.append(id)
+        mutable_find = id
         self.g.add_node(id,fn=fn, args=args, mutable_find=mutable_find,mutable_ccpar=mutable_ccpar)
                 
     # PRINT NODE 

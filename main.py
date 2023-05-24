@@ -10,17 +10,17 @@ def main():
     # IMPLEMENTATION:
     # Parsing the file
     equations,atoms = smt_parser.parse(sys.argv[1]) 
-    print()
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
-    print(solver)
-    print(atom_parser.atom_dict)
+    print(f"Graph Nodes:\n{solver}")
+    print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
     # Parsing the formulas and transforming them in tuples for the CC algorithm 
     solver.equalities, solver.inequalities = gp.parse_equations(equations,atom_parser.atom_dict) 
     print(solver.equalities)
     print(solver.inequalities)
+    print()
     # Running Congruence Closure 
-    # solver.solve() 
+    solver.solve() 
 
 if __name__ == "__main__": 
     main()

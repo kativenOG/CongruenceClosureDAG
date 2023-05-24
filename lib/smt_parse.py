@@ -19,7 +19,9 @@ class smt_parser():
         formulas = list(map(lambda x: x.serialize(),list(f.args())))
         atoms    = list(map(lambda x: x.serialize(),list(f.get_atoms())))
         print("*"*80)
+        print(f"Problem: ")
         print(f"Atoms:\n{atoms}\nFormulas:\n{formulas}")
         print("*"*80)
+        print()
         return formulas,atoms 
 
