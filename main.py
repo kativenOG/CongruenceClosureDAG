@@ -5,7 +5,7 @@ def main():
     # DECLARATIONS:
     solver = cc.CC_DAG()
     smt_parser = smtp.smt_parser()
-    atom_parser = gp.atom_parser(solver) 
+    atom_parser = gp.parse_atoms(solver) 
 
     # IMPLEMENTATION:
     # Parsing the file
@@ -17,5 +17,5 @@ def main():
     # Running Congruence Closure 
     solver.solve() 
 
-if __name__ == "__main__": #   
+if __name__ == "__main__": 
     main()

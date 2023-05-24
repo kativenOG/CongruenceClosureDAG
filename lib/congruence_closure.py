@@ -9,6 +9,14 @@ class CC_DAG:
         self.equalities = []
         self.inequalities = []
          
+    def __str__(self):
+        nodes = list(self.g.nodes) 
+        result = ""
+        for node in nodes:
+            node_string = self.node_string(node)
+            result += f"{node} {node_string}\n" 
+        return result
+
     def add_node(self,id,fn,args = []):
         mutable_ccpar = set()
         # mutable_ccpar.add(father)
