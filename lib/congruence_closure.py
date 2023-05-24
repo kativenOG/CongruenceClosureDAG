@@ -17,7 +17,7 @@ class CC_DAG:
             result += f"{node} {node_string}\n" 
         return result
 
-    def add_node(self,id,fn,args = []):
+    def add_node(self,id,fn,args):
         mutable_ccpar = set()
         # mutable_ccpar.add(father)
         mutable_find = []
@@ -27,12 +27,13 @@ class CC_DAG:
     # PRINT NODE 
     def node_string(self,id): 
         target = self.g.nodes[id]
-        if len(target["args"]) > 0:
+        if len(target["args"]) == 0:
             return "{}".format(target["fn"])
         else:
             args_str = ""
             for arg in target["args"]:
-                args_str = args_str + self.node_string(arg)
+                args_str = args_str + self.node_string(arg) + ", "
+            args_str = args_str[:-2]
             return "{}({})".format(target["fn"],args_str)
 
     def update_node(self,id,mutable_find=None,mutable_ccpar=None):

@@ -15,6 +15,7 @@ class smt_parser():
         assert script.count_command_occurrences("assert") == 1
         assert script.contains_command("check-sat")
         # Get a list of Atoms and the Equations 
+        dir()
         formulas = list(map(lambda x: x.serialize(),list(f.args())))
         atoms    = list(map(lambda x: x.serialize(),list(f.get_atoms())))
         print("*"*80)
