@@ -35,11 +35,17 @@ class CC_DAG:
             args_str = args_str[:-2]
             return "{}({})".format(target["fn"],args_str)
 
-    def update_node(self,id,mutable_find=None,mutable_ccpar=None):
-        target = self.g.nodes[id]
-        if mutable_find != None: target["mutable_find"] = target["mutable_find"] + mutable_find
-        if mutable_ccpar!= None: target["mutable_ccpar"].update(mutable_ccpar)
-        # self.g.add_node(id,fn=fn, args=args, mutable_find=mutable_find,mutable_ccpar=mutable_ccpar)
+    def complete_ccpar(self):
+        nodes_list = list(self.g.nodes)#(data=True)) 
+        for id in nodes_list:
+            self.add_father(id) 
+            pass
+
+    def add_father(self,id):
+        father_args = self.g.nodes[id]["args"]
+        for arg in father_args:
+            target = self.g.nodes[arg] 
+            target["mutable_ccpar"].add(id)
 
     def NODE(self,id):
         attr_dict = self.g.nodes[id]

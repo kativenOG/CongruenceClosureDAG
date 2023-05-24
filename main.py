@@ -12,6 +12,8 @@ def main():
     equations,atoms = smt_parser.parse(sys.argv[1]) 
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
+    solver.complete_ccpar()
+    # print(solver.g.nodes(data=True))
     print(f"Graph Nodes:\n{solver}")
     print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
     # Parsing the formulas and transforming them in tuples for the CC algorithm 

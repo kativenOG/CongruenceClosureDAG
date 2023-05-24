@@ -78,14 +78,13 @@ class parse_atoms:
                 return copy.copy(self.id)
             return check_id
         else: return 
-        
+
     def parse(self,atoms):
         for atom in atoms: 
             atom = "(" + atom + ")"
             if self.atom_dict.get(atom,"default") == "default": # dissect the atom if is not already in the dict
                 dissected_atom = nestedExpr('(',')').parseString(atom).asList()
                 dissected_atom = dissected_atom[0]
-                # print(f"Dissected Atom: {dissected_atom}")
                 self.rec_build(None,dissected_atom)
              
     # TODO: add parenths to each node in the graph 
