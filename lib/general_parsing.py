@@ -1,18 +1,21 @@
 import copy
 from pyparsing import *
 
-# TODO: check on inequalities is stupid and needs to be improved 
 def parse_equations(equations,atom_dict):
     equalities,inequalities = [],[]
     for eq in equations:
-        type = True 
-        appo = eq[1:-1]
         if "!" in eq:
-            type = False
-            appo = eq[1:-1].split("!")[1].strip()[1:-2]
-        equality = appo.split("<->")
-        if type: equalities.append([atom_dict[equality[0].strip()],atom_dict[equality[1].strip()]])
-        else: inequalities.append([atom_dict[equality[0].strip()],atom_dict[equality[1].strip()]])
+            inequality = eq[1:-1].split("!")[1].strip()[1:-1]
+            inequality = inequality.split("<->")
+            print(inequality)
+            transformed = [atom_dict[inequality[0].strip()],atom_dict[inequality[1].strip()]]
+            inequalities.append(transformed)
+        else:
+            equality = eq[1:-1].split("<->")
+            print(equality)
+            transformed = [atom_dict[equality[0].strip()],atom_dict[equality[1].strip()]]
+            equalities.append(transformed)
+
     return equalities,inequalities
 
 class parse_atoms:
