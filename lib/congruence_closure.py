@@ -49,14 +49,15 @@ class CC_DAG:
 
     def NODE(self,id):
         attr_dict = self.g.nodes[id]
+        print(attr_dict)
         return attr_dict 
 
-    def find(self,id): 
+    def find(self,id)->int: 
         n = self.NODE(id)
         if n["mutable_find"] == id: 
             return id
         else:
-            self.find(n["mutable_find"])
+            return self.find(n["mutable_find"])
 
     def ccpar(self,id):
         result = self.NODE(self.find(id))
@@ -95,8 +96,6 @@ class CC_DAG:
         else: 
             return False
 
-    def check_DAG(self):
-        nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input
 
     def solve(self):
         for eq in self.equalities:
@@ -110,6 +109,9 @@ class CC_DAG:
                 return "UNSAT"
         print("SAT")
         return "SAT"
+
+    # def check_DAG(self):
+    #     nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input
 
     # def draw(self):
     #     try:
