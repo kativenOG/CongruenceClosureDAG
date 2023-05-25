@@ -9,7 +9,7 @@ def main():
 
     # IMPLEMENTATION:
     # Parsing the file
-    equations,atoms = smt_parser.parse(sys.argv[1]) 
+    equations,atoms = smt_parser.parse(sys.argv[1]) #"./inputs/input1.smt2")#
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
     solver.complete_ccpar()
@@ -22,7 +22,7 @@ def main():
     print(solver.inequalities)
     print()
     # Running Congruence Closure 
-    solver.solve() 
+    result = solver.solve() 
 
 if __name__ == "__main__": 
     main()
