@@ -2,7 +2,7 @@
 
 ##### TODO:
 - [x] Finish creation of the graph
-- [ ] Fix CC_DAG 
+- [x] Fix CC_DAG 
 - [ ] Remove Networkx 
 - [ ] Simplify Input Formulas
 
