@@ -1,5 +1,5 @@
 from pysmt.smtlib.parser import SmtLibParser
-from pysmt.oracles import get_logic
+# from pysmt.oracles import get_logic
 
 class smt_parser():
     def __init__(self):
@@ -11,7 +11,7 @@ class smt_parser():
         # Get the last Assert 
         f= script.get_last_formula()
         # Checks on the File
-        assert str(get_logic(f)) == "QF_UF" 
+        # assert str(get_logic(f)) == "QF_UF" 
         assert script.count_command_occurrences("assert") == 1
         assert script.contains_command("check-sat")
         # Get a list of Atoms and the Equations 

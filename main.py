@@ -10,6 +10,7 @@ def main():
     # IMPLEMENTATION:
     # Parsing the file
     equations,atoms = smt_parser.parse(sys.argv[1]) #"./inputs/input1.smt2")#
+    # exit()
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
     solver.complete_ccpar()
