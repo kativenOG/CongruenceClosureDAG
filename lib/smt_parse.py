@@ -18,10 +18,19 @@ class smt_parser():
         dir()
         formulas = list(map(lambda x: x.serialize(),list(f.args())))
         atoms    = list(map(lambda x: x.serialize(),list(f.get_atoms())))
+        real_atoms = []
+        for atom in atoms:
+            if atom.find("=") != -1:
+                equality = atom[1:-1].split("=")
+                real_atoms.append(equality[0].strip())
+                real_atoms.append(equality[1].strip())
+            else:
+                real_atoms.append(atom) #[1:-1])
+
         print("*"*80)
         print(f"Problem: ")
         print(f"Atoms:\n{atoms}\nFormulas:\n{formulas}")
         print("*"*80)
-        print()
-        return formulas,atoms 
+
+        return formulas,list(set(real_atoms))
 

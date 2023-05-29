@@ -6,12 +6,12 @@ def parse_equations(equations,atom_dict):
     for eq in equations:
         if "!" in eq:
             inequality = eq[1:-1].split("!")[1].strip()[1:-1]
-            inequality = inequality.split("<->")
+            inequality = inequality.split("=")
             print(inequality)
             transformed = [atom_dict[inequality[0].strip()],atom_dict[inequality[1].strip()]]
             inequalities.append(transformed)
         else:
-            equality = eq[1:-1].split("<->")
+            equality = eq[1:-1].split("=")
             print(equality)
             transformed = [atom_dict[equality[0].strip()],atom_dict[equality[1].strip()]]
             equalities.append(transformed)
@@ -87,6 +87,3 @@ class parse_atoms:
                 dissected_atom = dissected_atom[0]
                 self.rec_build(None,dissected_atom)
              
-    # TODO: add parenths to each node in the graph 
-    def add_ccpar(self):
-        pass 
