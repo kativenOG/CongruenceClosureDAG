@@ -1,7 +1,11 @@
 import sys
 from lib import *
 
-def main():
+def main(file=""):
+    # Checks
+    if len(sys.argv)>2: file = sys.argv[1]
+    elif file == "": exit()
+
     # DECLARATIONS:
     solver = cc.CC_DAG()
     smt_parser = smtp.smt_parser()
@@ -9,21 +13,22 @@ def main():
 
     # IMPLEMENTATION:
     # Parsing the file
-    equations,atoms = smt_parser.parse(sys.argv[1]) #"./inputs/input1.smt2")#
+    equations,atoms = smt_parser.parse(file) #"./inputs/input1.smt2")#
     # exit()
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
     solver.complete_ccpar()
     # print(solver.g.nodes(data=True))
-    print(f"Graph Nodes:\n{solver}")
-    print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
+    # print(f"Graph Nodes:\n{solver}")
+    # print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
     # Parsing the formulas and transforming them in tuples for the CC algorithm 
     solver.equalities, solver.inequalities = gp.parse_equations(equations,atom_parser.atom_dict) 
-    print(solver.equalities)
-    print(solver.inequalities)
-    print()
+    # print(solver.equalities)
+    # print(solver.inequalities)
+    # print()
     # Running Congruence Closure 
     result = solver.solve() 
+    return result 
 
 if __name__ == "__main__": 
     main()
