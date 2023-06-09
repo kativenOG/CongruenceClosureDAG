@@ -4,15 +4,13 @@ from pyparsing import *
 def parse_equations(equations,atom_dict):
     equalities,inequalities = [],[]
     for eq in equations:
-        if "!" in eq:
+        if ("!" in eq) and ("=" in eq):
             inequality = eq[1:-1].split("!")[1].strip()[1:-1]
             inequality = inequality.split("=")
-            print(inequality)
             transformed = [atom_dict[inequality[0].strip()],atom_dict[inequality[1].strip()]]
             inequalities.append(transformed)
         else:
             equality = eq[1:-1].split("=")
-            print(equality)
             transformed = [atom_dict[equality[0].strip()],atom_dict[equality[1].strip()]]
             equalities.append(transformed)
 
@@ -68,12 +66,10 @@ class parse_atoms:
                 iter_string= iter_string + instance +", "
             iter_string = iter_string[:-2]
             real_node = fn + "(" + iter_string  + ")"
-            # print(real_node) 
             check_id =  self.atom_dict.get(real_node,"default")
             if check_id == "default":  # CREATE SINGLE LITERAL ELEMENT
                 self.id+=1
                 self.atom_dict[real_node] = copy.copy(self.id)
-                # print(real_args)
                 self.cc_dag.add_node(id=copy.copy(self.id),fn=fn,args=real_args)
                 return copy.copy(self.id)
             return check_id

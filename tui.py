@@ -1,52 +1,101 @@
-import curses, curses.ascii, math
-from curses import A_REVERSE, KEY_DOWN, KEY_UP, KEY_LEFT, KEY_RIGHT, KEY_ENTER
-# stdscr = curses.initscr()
-def main(screen):
-    # screen.clear()
-    key = 0
-    screen.border()
-    while key != curses.ascii.ESC:
-        height, width = screen.getmaxyx()
-        title = "CONGRUENCE CLOSURE"
-        screen.addstr(math.ceil(height/4),math.ceil((width-len(title))/2),title, curses.A_REVERSE | curses.A_BOLD | curses.A_DIM)
+import blessed,os
+from blessed import Terminal
+from main import main
 
-        current_key = str(key) + "," + str(height)  + "," + str(width)
-        screen.addstr(height-3,width-15,current_key, curses.A_REVERSE | curses.A_BOLD | curses.A_DIM)
+# Standard Reset
+term = Terminal()
+term.on_white()
+top_y = term.height // 5
+print(term.home + term.clear + term.move_y(top_y))
 
-        # Test
-        begin_x = 20; begin_y = 7
-        height = 5; width = 40
-        menu= curses.newwin(height, width, begin_y, begin_x)
-        menu.addstr(0,0,"prova",curses.A_REVERSE)
-        menu.border()
+options = [ "│             Upload File               │",\
+            "│       Download QF_UF Repository       │",\
+            "│            Use Repository             │" ]
 
-        # Always
-        key = screen.getch() # Listen for key 
-        screen.refresh() # Update changes on screen 
-        screen.erase() # Deactivate pixels that are no longer used 
-        screen.border()
+start = ( term.height // 5 ) + 3
+offset = 0
+with term.cbreak(), term.hidden_cursor(): #, term.fullscreen():
+    current_y = top_y
+    print(term.center("┌────┤"+term.cyan2(" CONGRUENCE CLOSURE WITH DAG ")+"├────┐"))
+    current_y+=3
+    print(term.center('│                                       │'))
+    print(term.center("│       "+ term.deepskyblue4("Please select an option")+ "         │"))
+    for i in range(8):
+        current_y+=1
+        if 5>i>1: print(term.center(options[i-2]))
+        else: print(term.center('│                                       │'))
+    current_y+=2
+    print(term.center('└─────┤ Andrea Mangrella VR490856 ├─────┘'))
+    print(term.move_y(term.height - 5) + term.center(f"{term.link('https://github.com/kativenOG', 'Github Project Page')}"))
+    
+    inp = ""
+    while True:
+        inp = term.inkey()
+        print(term.move_y(start + 3 + offset) + term.center(options[offset]))
+        if inp.lower() == "j" or inp.code == term.KEY_DOWN: offset= offset + 1 if(offset!=2) else 0
+        if inp.lower() == "k" or inp.code == term.KEY_UP: offset= offset - 1 if(offset!=0) else 2
+        print(term.move_y(start + 3 + offset) + term.center(term.black_on_cyan2(options[offset])))
+        if inp.lower() == "q" or inp.code == term.KEY_ESCAPE: exit()
+        elif inp.code == term.KEY_ENTER: break
+    match offset:
+        case 0: # Upload file
+            target_file = ""
+            while target_file == "":
+                paths = os.listdir()
+                paths = [x for x in paths if x[0]!= "."]
+                print(term.home() + term.clear() )
+                selected = 0 
+                print(term.move_y(term.height - len(paths) - int(term.height*0.6)) + term.center("┌────┤"+term.cyan2(" SELECT SMT2 FILE ")+"├────┐"))
+                print(term.center(    '│                            │'))
+                print(term.center(    '│                            │'))
+                while True: 
+                    paths = [x for x in paths if x[0]!= "."]
+                    print(term.move_y(term.height - len(paths) - int(term.height*0.6) + 2))
+                    for filename in paths:
+                        spaces = " "*(27 - len(filename))
+                        if filename == paths[selected]: 
+                            print(term.center("│ " + term.black_on_cyan2(filename)+ spaces + "│"))
+                        else:
+                            print(term.center("│ " + filename + spaces + "│"))
+                    print(term.center('│                            │'))
+                    print(term.center('└────────────────────────────┘'))
+                    inp = term.inkey()
+                    if inp.lower() == "j" or inp.code == term.KEY_DOWN: 
+                        selected = (selected + 1) if(selected<(len(paths)-1)) else 0
+                    elif inp.lower() == "k" or inp.code == term.KEY_UP: 
+                        selected = (selected - 1) if(selected>0) else (len(paths) -1)
+                    elif inp.code == term.KEY_LEFT or inp.lower()=="h": 
+                            os.chdir("..")
+                            selected,paths = 0, os.listdir()
+                            break
+                    elif inp.code == term.KEY_ENTER or inp.code == term.KEY_RIGHT or inp.lower()=="l": 
+                        check = paths[selected].split(".")[-1] == "smt2"
+                        print(term.move_y(0) + term.center(str(check)))
+                        if check: # Is a smt file 
+                            target_file = paths[selected] 
+                            break
+                        else:  # Changes dir only if is a directory 
+                            if os.path.isdir(paths[selected]):
+                                os.chdir(paths[selected])
+                                selected,paths = 0, os.listdir()
+                                break
 
+                    elif inp.lower() == "q" or inp.code == term.KEY_ESCAPE: 
+                        exit()
 
-if __name__ == "__main__":
-    curses.wrapper(main)
+            while True: 
+                print( term.center(term.black_on_cyan2(main(target_file,term))))
+                inp = term.inkey()
+                if inp.lower() == "q" or inp.code == term.KEY_ESCAPE: exit()
 
-# def main(screen):
-#     ch, first, selected, paths = 0, 0, 0, os.listdir()
-#     while ch != curses.ascii.ESC:
-#         height, width = screen.getmaxyx()
-#         screen.erase()
-#         for y, filename in enumerate(paths[first : first+height]):
-#             color = A_REVERSE if filename == paths[selected] else 0
-#             screen.addstr(y, 0, filename[:width-1], color)
-#         ch = screen.getch()
-#         selected += (ch == KEY_DOWN) - (ch == KEY_UP)
-#         selected = max(0, min(len(paths)-1, selected))
-#         first += (selected >= first + height) - (selected < first)
-#         if ch in [KEY_LEFT, KEY_RIGHT, KEY_ENTER, ord('\n'), ord('\r')]:
-#             new_dir = '..' if ch == KEY_LEFT else paths[selected]
-#             if os.path.isdir(new_dir):
-#                 os.chdir(new_dir)
-#                 first, selected, paths = 0, 0, os.listdir()
+        case 1: # Download QF_UF Repo 
+            pass
+        case 2: # Use file from repo
+            print(term.home() + term.clear())
+            file =  "./inputs/input1.smt2"
+            print(term.move_y(2)+term.center(term.deepskyblue4(file)))
+            print( term.center(term.black_on_cyan2(main(file))))
+        case _:
+            pass
 
-# if __name__ == '__main__':
-#     curses.wrapper(main)
+# print(term.move_down(2) + 'You pressed ' + term.bold(repr(inp)))

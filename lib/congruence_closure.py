@@ -90,11 +90,8 @@ class CC_DAG:
             pi2 = self.ccpar(id2)
             self.union(id1,id2)
             for t1,t2 in product(pi1,pi2):
-                # print(f"t1: {t1}, t2: {t2}")
                 if (self.find(t1) is not self.find(t2)) and self.congruent(t1,t2):
                     self.merge(t1,t2)
-                    # node1 = self.NODE(t1)
-                    # node2 = self.NODE(t2)
             return True
         else: 
             return False
@@ -103,28 +100,14 @@ class CC_DAG:
     def solve(self):
         for eq in self.equalities:
             val1,val2 =  self.find(eq[0]),self.find(eq[1])
-            print(f"Eq: {eq}")
+            # print(f"Eq: {eq}")
             self.merge(eq[0],eq[1])
         for ineq in self.inequalities:
             val1,val2 =  self.find(ineq[0]),self.find(ineq[1])
-            print(f"Ineq: {ineq} <-> Mutable_find: [{val1},{val2}] ")
+            # print(f"Ineq: {ineq} <-> Mutable_find: [{val1},{val2}] ")
             if val1 == val2: # If the inequality is not correct it's UNSAT 
-                print("UNSAT")
+                # print("UNSAT")
                 return "UNSAT"
-        print("SAT")
+        # print("SAT")
         return "SAT"
-
-    # def check_DAG(self):
-    #     nx.is_directed_acyclic_graph(self.g) # Check if Acyclic when using Input
-
-    # def draw(self):
-    #     try:
-    #         plt.tight_layout()
-    #         nx.draw_networkx(self.g, arrows=True)
-    #         plt.savefig("dac.png", format="PNG")
-    #         plt.clf()
-    #         return
-    #     except:
-    #         print("ERROR")
-    #         return 
 

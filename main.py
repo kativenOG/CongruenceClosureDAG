@@ -1,10 +1,12 @@
 import sys
 from lib import *
 
-def main(file=""):
+def main(file="",term=None):
     # Checks
-    if len(sys.argv)>2: file = sys.argv[1]
-    elif file == "": exit()
+    if len(sys.argv)>1: file = sys.argv[1]
+    if file == "": 
+        print("ERROR: no input file!")
+        exit()
 
     # DECLARATIONS:
     solver = cc.CC_DAG()
@@ -14,20 +16,29 @@ def main(file=""):
     # IMPLEMENTATION:
     # Parsing the file
     equations,atoms = smt_parser.parse(file) #"./inputs/input1.smt2")#
-    # exit()
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
     solver.complete_ccpar()
-    # print(solver.g.nodes(data=True))
-    # print(f"Graph Nodes:\n{solver}")
-    # print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
     # Parsing the formulas and transforming them in tuples for the CC algorithm 
     solver.equalities, solver.inequalities = gp.parse_equations(equations,atom_parser.atom_dict) 
-    # print(solver.equalities)
-    # print(solver.inequalities)
-    # print()
     # Running Congruence Closure 
     result = solver.solve() 
+    # Prints
+    if term != None:
+        print(term.home() + term.clear())
+        print(term.center("Atoms:"))
+        print(term.center(f"{atoms}"))
+        print(term.center("Formulas:"))
+        print(term.center(f"{equations}"))
+    elif (file!=""):
+        print((f"Problem: "))
+        print((f"Atoms:\n{atoms}\nFormulas:\n{equations}"))
+        print(solver.g.nodes(data=True))
+        print(f"Graph Nodes:\n{solver}")
+        print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
+        print(solver.equalities)
+        print(solver.inequalities)
+        print(result)
     return result 
 
 if __name__ == "__main__": 
