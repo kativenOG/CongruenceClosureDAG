@@ -110,4 +110,3 @@ class CC_DAG:
                 return "UNSAT"
         # print("SAT")
         return "SAT"
-

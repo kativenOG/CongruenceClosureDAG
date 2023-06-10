@@ -1,4 +1,4 @@
-import blessed,os
+import blessed,os,math
 from os.path import isdir
 from blessed import Terminal
 from git.repo.base import Repo
@@ -22,8 +22,9 @@ def fs_search(term)->str:
             cap =  len(paths)
             if len(paths)> 10: cap = 10 
 
-            n_lines = (x_len - 18 )//2
-            print(term.move_y(term.height - cap -int(term.height*0.5)) + term.center("┌"+ "─"*n_lines + "┤" + term.cyan2(" SELECT SMT2 FILE ")+ "├" + "─"*n_lines +"┐"))
+            n_lines_l = (x_len - 18 )//2
+            n_lines_r = n_lines_l + (math.ceil((x_len - 18 )/2)%n_lines_l)
+            print(term.move_y(term.height - cap -int(term.height*0.5)) + term.center("┌"+ "─"*n_lines_l+ "┤" + term.cyan2(" SELECT SMT2 FILE ")+ "├" + "─"*n_lines_r+"┐"))
             print(term.center("│ " + " "*x_len + " │"))
             print(term.center("│ " + " "*x_len + " │"))
             print(term.move_y(term.height -  cap - int(term.height*0.5) + 2))
@@ -35,17 +36,27 @@ def fs_search(term)->str:
                     print(term.center("│ " + filename + spaces + " │"))
             print(term.center("│ " + " "*x_len + " │"))
             print(term.center("└─" + "─"*x_len + "─┘"))
+
+            # KEY PRESS HANDLERS 
             inp = term.inkey()
             if inp.lower() == "j" or inp.code == term.KEY_DOWN: 
-                if selected >= cap:
+                if selected == (len(paths)-1):
+                    pass
+                elif selected >= (cap-1):
                     upper_bound += 1
-                    lower_bound -= 1
-                else:selected = (selected + 1) if(selected<(len(paths)-1)) else 0
-            elif inp.lower() == "k" or inp.code == term.KEY_UP: 
-                if selected >= cap:
-                    upper_bound -= 1
                     lower_bound += 1
-                selected = (selected - 1) if(selected>0) else (len(paths) -1)
+                    selected+=1
+                else: selected += 1
+                print(term.move_y(term.height -10) + term.clear_eol + term.center(f"Selected:{selected} ub:{upper_bound} lb:{lower_bound}"))
+            elif inp.lower() == "k" or inp.code == term.KEY_UP: 
+                if selected <= 0:
+                    pass
+                elif selected >= (cap-1) and lower_bound>0:
+                    upper_bound -= 1
+                    lower_bound -= 1
+                    selected-=1
+                else: selected -= 1 
+                print(term.move_y(term.height -10) + term.clear_eol + term.center(f"Selected:{selected} ub:{upper_bound} lb:{lower_bound}"))
             elif inp.code == term.KEY_LEFT or inp.lower()=="h": 
                     os.chdir("..")
                     selected,paths = 0, os.listdir()
@@ -62,7 +73,6 @@ def fs_search(term)->str:
                         os.chdir(paths[selected])
                         selected,paths = 0, os.listdir()
                         break
-
             elif inp.lower() == "q" or inp.code == term.KEY_ESCAPE: 
                 exit()
 
