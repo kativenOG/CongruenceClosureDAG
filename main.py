@@ -15,7 +15,7 @@ def main(file="",term=None):
 
     # IMPLEMENTATION:
     # Parsing the file
-    equations,atoms = smt_parser.parse(file) 
+    equations,atoms,ground_truth = smt_parser.parse(file) 
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
     solver.complete_ccpar()
@@ -30,9 +30,13 @@ def main(file="",term=None):
         print()
         print(term.center("Atoms:"))
         print(term.center(f"{atoms}"))
+        print()
         print(term.center("Formulas:"))
         print(term.center(f"{equations}"))
         print()
+        print(term.center(term.black_on_red(f"Ground Truth: {ground_truth}")))
+        print()
+        print(term.center(term.black_on_green(f"Result: {result}")))
     elif file != "":
         print((f"Problem: "))
         print((f"Atoms:\n{atoms}\nFormulas:\n{equations}"))
@@ -41,8 +45,8 @@ def main(file="",term=None):
         print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
         print(solver.equalities)
         print(solver.inequalities)
-        print(result)
-    return result 
+        print(f"Ground Truth: {ground_truth}")
+        print(f"Result: {result}")
 
 if __name__ == "__main__": 
     main()

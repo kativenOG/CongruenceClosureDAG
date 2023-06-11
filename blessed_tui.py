@@ -123,7 +123,7 @@ def tui_main():
                 case 0: # Upload file
                     target_file = fs_search(term) 
                     while True: 
-                        print( term.center(term.black_on_cyan2(main(target_file,term))))
+                        main(target_file,term)
                         inp = term.inkey()
                         if inp.lower() == "q" or inp.code == term.KEY_ESCAPE: exit()
         
@@ -139,7 +139,7 @@ def tui_main():
                         os.chdir("./qf_uf_repo") 
                         target_file = fs_search(term) 
                         while True: 
-                            print( term.center(term.black_on_cyan2(main(target_file,term))))
+                            main(target_file,term)
                             inp = term.inkey()
                             if inp.lower() == "q" or inp.code == term.KEY_ESCAPE: exit()
                     else:
