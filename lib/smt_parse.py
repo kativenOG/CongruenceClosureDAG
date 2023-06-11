@@ -1,5 +1,7 @@
 from pysmt.smtlib.parser import SmtLibParser
-# from pysmt.oracles import get_logic
+from pysmt.rewritings import CNFizer 
+cnf_parser = CNFizer()
+# from cnf_converter import cnf_convert 
 
 class smt_parser():
     def __init__(self):
@@ -8,16 +10,22 @@ class smt_parser():
     def parse(self,filename):
         # NB: Should create an smtlib env here for script values 
         script = self.parser.get_script_fname(filename)
-        # Get the last Assert 
-        # f= script.get_last_formula() # No More 
+
+        # Get all the Assert's
+        # f= script.get_last_formula() # No More only last assert
         f= script.get_strict_formula()
-        # print(f.serialize())
+
         # Checks on the File
         assert script.count_command_occurrences("assert") >= 1
         assert script.contains_command("check-sat")
+
+        # Transform formulas to cnf 
+        # converted = cnf_parser.convert(f)
+        # formulas = cnf_parser.serialize(converted) 
+
         formulas = f.serialize() #list(map(lambda x: x.serialize(),list(f.args())))
         atoms    = list(map(lambda x: x.serialize(),list(f.get_atoms())))
-        print(formulas)
+
         real_atoms,real_formulas = [],[]
         for atom in atoms:
             if atom.find("=") != -1:
@@ -26,12 +34,13 @@ class smt_parser():
                 real_atoms.append(equality[1].strip())
             else:
                 real_atoms.append(atom) #[1:-1])
+        # Separate all Ands 
         if formulas.find("&") != -1:
             separated_formulas = formulas[1:-1].split("&")
-            # separated_formulas[0], separated_formulas[0]= separated_formulas[0][1:-1],separated_formulas[-1][:-1]
             real_formulas.extend(list(map(lambda x: x.strip(),separated_formulas)))
+        # Remove all non-equality formulas
         real_formulas = [x for x in real_formulas if x.find("=")!=-1 ]
 
-        print(real_formulas)
-
+        # print(real_formulas)
+        # real_formulas = cnf_convert(real_formulas)
         return real_formulas,list(set(real_atoms))

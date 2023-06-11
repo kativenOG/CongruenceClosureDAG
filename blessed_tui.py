@@ -24,10 +24,10 @@ def fs_search(term)->str:
 
             n_lines_l = (x_len - 18 )//2
             n_lines_r = n_lines_l + (math.ceil((x_len - 18 )/2)%n_lines_l)
-            print(term.move_y(term.height - cap -int(term.height*0.5)) + term.center("┌"+ "─"*n_lines_l+ "┤" + term.cyan2(" SELECT SMT2 FILE ")+ "├" + "─"*n_lines_r+"┐"))
+            print(term.move_y(term.height - cap -int(term.height*0.6)) + term.center("┌"+ "─"*n_lines_l+ "┤" + term.cyan2(" SELECT SMT2 FILE ")+ "├" + "─"*n_lines_r+"┐"))
             print(term.center("│ " + " "*x_len + " │"))
             print(term.center("│ " + " "*x_len + " │"))
-            print(term.move_y(term.height -  cap - int(term.height*0.5) + 2))
+            print(term.move_y(term.height -  cap - int(term.height*0.6) + 2))
             for filename in paths[lower_bound:upper_bound]:
                 spaces = " "*(x_len - len(filename))
                 if filename == paths[selected]: 
@@ -47,7 +47,7 @@ def fs_search(term)->str:
                     lower_bound += 1
                     selected+=1
                 else: selected += 1
-                print(term.move_y(term.height -10) + term.clear_eol + term.center(f"Selected:{selected} ub:{upper_bound} lb:{lower_bound}"))
+                # print(term.move_y(term.height -10) + term.clear_eol + term.center(f"Selected:{selected} ub:{upper_bound} lb:{lower_bound}"))
             elif inp.lower() == "k" or inp.code == term.KEY_UP: 
                 if selected <= 0:
                     pass
@@ -56,7 +56,7 @@ def fs_search(term)->str:
                     lower_bound -= 1
                     selected-=1
                 else: selected -= 1 
-                print(term.move_y(term.height -10) + term.clear_eol + term.center(f"Selected:{selected} ub:{upper_bound} lb:{lower_bound}"))
+                # print(term.move_y(term.height -10) + term.clear_eol + term.center(f"Selected:{selected} ub:{upper_bound} lb:{lower_bound}"))
             elif inp.code == term.KEY_LEFT or inp.lower()=="h": 
                     os.chdir("..")
                     selected,paths = 0, os.listdir()
@@ -100,7 +100,10 @@ def tui_main():
             print(term.center("│       "+ term.deepskyblue4("Please select an option")+ "         │"))
             for i in range(8):
                 current_y+=1
-                if 5>i>1: print(term.center(options[i-2]))
+                if 5>i>1: 
+                    select_pos = i-2
+                    if select_pos != offset: print(term.center(options[i-2]))
+                    else: print(term.center(term.black_on_cyan2(options[i-2])))
                 else: print(term.center('│                                       │'))
             current_y+=2
             print(term.center('└─────┤ Andrea Mangrella VR490856 ├─────┘'))

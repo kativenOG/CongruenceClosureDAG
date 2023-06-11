@@ -15,7 +15,7 @@ def main(file="",term=None):
 
     # IMPLEMENTATION:
     # Parsing the file
-    equations,atoms = smt_parser.parse(file) #"./inputs/input1.smt2")#
+    equations,atoms = smt_parser.parse(file) 
     # Drawing the graph in the CC_DAG object instance
     atom_parser.parse(atoms) 
     solver.complete_ccpar()
@@ -25,12 +25,15 @@ def main(file="",term=None):
     result = solver.solve() 
     # Prints
     if term != None:
-        print(term.home() + term.clear())
+        print(term.home() + term.clear() + term.move_y(term.height//3))
+        print(term.center(term.cyan2("_____RESULT_____")))
+        print()
         print(term.center("Atoms:"))
         print(term.center(f"{atoms}"))
         print(term.center("Formulas:"))
         print(term.center(f"{equations}"))
-    elif (file!=""):
+        print()
+    elif file != "":
         print((f"Problem: "))
         print((f"Atoms:\n{atoms}\nFormulas:\n{equations}"))
         print(solver.g.nodes(data=True))
