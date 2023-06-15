@@ -8,45 +8,70 @@ def main(file="",term=None):
         print("ERROR: no input file!")
         exit()
 
-    # DECLARATIONS:
-    solver = cc.CC_DAG()
+    # Declaring SMT Parser:
     smt_parser = smtp.smt_parser()
-    atom_parser = gp.parse_atoms(solver) 
 
-    # IMPLEMENTATION:
     # Parsing the file
-    equations,atoms,ground_truth = smt_parser.parse(file) 
-    # Drawing the graph in the CC_DAG object instance
-    atom_parser.parse(atoms) 
-    solver.complete_ccpar()
-    # Parsing the formulas and transforming them in tuples for the CC algorithm 
-    solver.equalities, solver.inequalities = gp.parse_equations(equations,atom_parser.atom_dict) 
-    # Running Congruence Closure 
-    result = solver.solve() 
-    # Prints
-    if term != None:
-        print(term.home() + term.clear() + term.move_y(term.height//3))
-        print(term.center(term.cyan2("_____RESULT_____")))
-        print()
-        print(term.center("Atoms:"))
-        print(term.center(f"{atoms}"))
-        print()
-        print(term.center("Formulas:"))
-        print(term.center(f"{equations}"))
-        print()
+    cc_dag_instances,atoms,ground_truth = smt_parser.parse(file) 
+
+
+    end_result = "UNSAT" 
+    for equations in cc_dag_instances:
+        solver = cc.CC_DAG()
+        atom_parser = gp.parse_atoms(solver) 
+        # Drawing the graph in the CC_DAG object instance
+        atom_parser.parse(atoms) 
+        solver.complete_ccpar()
+        # Parsing the formulas and transforming them in tuples for the CC algorithm 
+        solver.equalities, solver.inequalities = gp.parse_equations(equations,atom_parser.atom_dict) 
+        # Running Congruence Closure 
+        result = solver.solve() 
+        if result == "SAT": end_result = "SAT" 
+
+        # Prints
+        if term != None:
+            print(term.home() +  term.clear() + term.move_y(term.height//3))
+            print(term.center(term.cyan2("_____RESULT_____")))
+            print()
+            print(term.center("Atoms:"))
+            print(term.center(f"{atom_parser.atom_dict}"))
+            print()
+            print(term.center("Formulas:"))
+            print(term.center(f"{equations}"))
+            # print()
+            # print(term.center(term.black_on_red(f"Ground Truth: {ground_truth}")))
+            print()
+            print(term.center(term.black_on_green(f"Result: {result}")))
+            print()
+            print(term.center(term.black_on_red("PRESS ANY KEY TO CONTINUE")))
+            inp = term.inkey() # Press any key
+
+        elif file != "":
+            print((f"Atoms:\n{atoms}\nFormulas:\n{equations}\n"))
+            print(f"Graph Nodes:\n{solver}")
+            print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
+            print(f"Equalities: {solver.equalities}")
+            print(f"Inequalities: {solver.inequalities}")
+            print()
+            # print(f"Ground Truth: {ground_truth}")
+            print(f"CC_DAG Result: {result}")
+            print()
+
+        
+    # Ground Truth
+    if term != None:  
+        print(term.home + term.clear() + term.move_y(term.height//2))
+        print(term.center(f"RESULTS:"))
         print(term.center(term.black_on_red(f"Ground Truth: {ground_truth}")))
-        print()
-        print(term.center(term.black_on_green(f"Result: {result}")))
-    elif file != "":
-        print((f"Problem: "))
-        print((f"Atoms:\n{atoms}\nFormulas:\n{equations}"))
-        print(solver.g.nodes(data=True))
-        print(f"Graph Nodes:\n{solver}")
-        print(f"Atom Dictionary:\n{atom_parser.atom_dict}\n")
-        print(solver.equalities)
-        print(solver.inequalities)
+        print(term.center(term.black_on_green(f"End Result: {end_result}")))
+        inp = term.inkey() # Press any key
+        exit()
+    elif file != "": 
+        print(f"RESULTS:")
         print(f"Ground Truth: {ground_truth}")
-        print(f"Result: {result}")
+        print(f"End Result: {end_result}")
+
+    return end_result
 
 if __name__ == "__main__": 
     main()
