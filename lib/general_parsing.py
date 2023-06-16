@@ -5,17 +5,14 @@ def parse_equations(equations,atom_dict):
     equalities,inequalities = [],[]
     print(equations)
     for eq in equations:
+        if eq[0] != "(": eq = "(" + eq + ")"
         if ("!" in eq) and ("=" in eq):
-            print(eq)
             inequality = eq[1:-1].split("!")[1].strip()[1:-1]
-            print(f"1: {inequality}")
             inequality = inequality.split("=")
-            print(f"2: {inequality}")
             transformed = [atom_dict[inequality[0].strip()],atom_dict[inequality[1].strip()]]
             inequalities.append(transformed)
         elif ("=" in eq):
             equality = eq[1:-1].split("=")
-            print(equality)
             transformed = [atom_dict[equality[0].strip()],atom_dict[equality[1].strip()]]
             equalities.append(transformed)
     return equalities,inequalities

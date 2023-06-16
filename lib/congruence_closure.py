@@ -25,7 +25,7 @@ class CC_DAG:
         self.g.add_node(id,fn=fn, args=args, mutable_find=mutable_find,mutable_ccpar=mutable_ccpar)
                 
     # PRINT NODE 
-    def node_string(self,id): 
+    def node_string(self,id):
         target = self.g.nodes[id]
         if len(target["args"]) == 0:
             return "{}".format(target["fn"])
@@ -106,7 +106,5 @@ class CC_DAG:
             val1,val2 =  self.find(ineq[0]),self.find(ineq[1])
             # print(f"Ineq: {ineq} <-> Mutable_find: [{val1},{val2}] ")
             if val1 == val2: # If the inequality is not correct it's UNSAT 
-                # print("UNSAT")
                 return "UNSAT"
-        # print("SAT")
         return "SAT"

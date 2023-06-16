@@ -34,17 +34,25 @@ class smt_parser():
                 real_atoms.append(atom) #[1:-1])
 
         # Real_formulas:
-        print(formulas)
-        for_formulas = formulas.split("|")
-        print(for_formulas)
+        for_formulas = []
+
+        if formulas.find("|") != -1:
+            for_formulas.extend(formulas[1:-1].split("|"))
+            for_formulas = list(map(lambda x: x.strip(), for_formulas))
+        else: for_formulas.extend([formulas])
          
         for formula in for_formulas:
-            real_formulas = []
-            separated_formulas = formula[1:-1].split("&")
+            real_formulas,separated_formulas = [],[]
+
+            if formulas.find("&") != -1:
+                separated_formulas = formula[1:-1].split("&")
+            else: separated_formulas = formula
             if len(separated_formulas)>1:
-                real_formulas.extend(list(map(lambda x: x[1:-1].strip(), separated_formulas)))
+                real_formulas.extend(list(map(lambda x: x.strip(), separated_formulas)))
             else: real_formulas = separated_formulas
+
             real_formulas = [x for x in real_formulas if x.find("=")!=-1 ]
             cc_dag_instances.append(real_formulas)
 
+            
         return cc_dag_instances,list(set(real_atoms)),ground_truth.upper()
