@@ -47,12 +47,12 @@ class smt_parser():
             if formulas.find("&") != -1:
                 separated_formulas = formula[1:-1].split("&")
             else: separated_formulas = formula
-            if len(separated_formulas)>1:
+            if len(separated_formulas)>1 and not(isinstance(separated_formulas,str)):
                 real_formulas.extend(list(map(lambda x: x.strip(), separated_formulas)))
-            else: real_formulas = separated_formulas
-
+            else: real_formulas = [separated_formulas]
             real_formulas = [x for x in real_formulas if x.find("=")!=-1 ]
             cc_dag_instances.append(real_formulas)
 
-            
+        # print(cc_dag_instances) 
+        # exit()
         return cc_dag_instances,list(set(real_atoms)),ground_truth.upper()

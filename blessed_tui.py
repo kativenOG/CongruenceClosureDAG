@@ -128,15 +128,15 @@ def tui_main():
                         if inp.lower() == "q" or inp.code == term.KEY_ESCAPE: exit()
         
                 case 1: # Download QF_UF Repo 
-                    if not os.path.isdir("./qf_uf_repo"):
+                    if not os.path.isdir("./inputs"):
                         print(term.move_xy(0,0) + term.clear_eol + term.center(term.blink("Donwloading the package!")))
-                        Repo.clone_from("https://clc-gitlab.cs.uiowa.edu:2443/SMT-LIB-benchmarks/QF_UF.git","./qf_uf_repo")
+                        Repo.clone_from("https://github.com/kativenOG/ar_inputs.git","./inputs")
                         print(term.move_xy(0,0) + term.center("Package Downloaded!"))
                     else:
                         print(term.move_xy(0,0) + term.clear_eol + term.center("Package as already been Downloaded!"))
                 case 2: # Use file from repo
-                    if os.path.isdir("./qf_uf_repo"):
-                        os.chdir("./qf_uf_repo") 
+                    if os.path.isdir("./inputs"):
+                        os.chdir("./inputs") 
                         target_file = fs_search(term) 
                         while True: 
                             main(target_file,term)
