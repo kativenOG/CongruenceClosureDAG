@@ -113,34 +113,33 @@ class CC_DAG:
                 return "UNSAT"
         return "SAT"
 
-    def visualize_dag(self, has_find = False):
+    def visualize_dag(self,G=None, has_find = False):
 
             # Create a dictionary to store node labels
             labels = {node[0]: f"{node[1]['fn']} (ID: {node[0]})" for node in self.g.nodes(data=True)}
 
             # Create new nx graph with edges 
-            new_graph = nx.DiGraph()
-            for node in self.g.nodes: new_graph.add_node(node)
-
-            # Add standard edges 
-            for node in self.g.nodes():
-                for par in self.ccpar(node): 
-                    new_graph.add_edge(par,node)
-
-            # Draw the graph that is going to be plotted 
-            # pos = nx.circular_layout(new_graph)
-            pos = nx.spring_layout(new_graph)
+            new_graph = None 
+            if G==None:
+                new_graph = nx.DiGraph()
+                for node in self.g.nodes: new_graph.add_node(node)
+                # Add standard edges 
+                for node in self.g.nodes():
+                    for par in self.ccpar(node): 
+                        if not (node == par): new_graph.add_edge(par,node)
+            else: new_graph = G
 
             # Draw the dotted edges with curved lines
+            pos = nx.circular_layout(new_graph)
             if has_find:
-                dotted_edges = []
-                # self.update_find_edge(G)
+                congruence_edges = []
                 for node in list(self.g.nodes(data=True)):
-                    if not (node[1]["mutable_find"] == node[0]):
-                        dotted_edges.append((node[0], self.g[node[1]["mutable_find"]]))
-                nx.draw_networkx_edges(new_graph, pos, edgelist=dotted_edges, style='dotted', connectionstyle='arc3,rad=0.3')
+                    if not (self.find(node[0]) == node[0]):
+                        congruence_edges.append((node[0], self.find(node[0])))
+                nx.draw_networkx_edges(new_graph, pos, edgelist=congruence_edges, style='dotted', connectionstyle='arc3,rad=0.3')
 
             nx.draw(new_graph, pos, with_labels=True, labels=labels, node_color='green', node_size=400, font_size=8, arrows=True)
             plt.show()
+            return new_graph 
     
 
