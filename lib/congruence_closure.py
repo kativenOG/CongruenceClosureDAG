@@ -67,7 +67,7 @@ class CC_DAG:
     def union(self,id1,id2):
         n1 = self.NODE(self.find(id1))
         n2 = self.NODE(self.find(id2))
-        if len(n2["mutable_ccpar"]) > len(n1["mutable_ccpar"]):
+        if len(n2["mutable_ccpar"]) >= len(n1["mutable_ccpar"]):
             n1["mutable_find"]  = copy.copy(n2["mutable_find"])
             n2["mutable_ccpar"].update(n1["mutable_ccpar"])
             n1["mutable_ccpar"] = set()
@@ -79,7 +79,7 @@ class CC_DAG:
     def congruent(self,id1,id2):
         n1 = self.NODE(id1)
         n2 = self.NODE(id2)
-        if (n1["fn"] is not n2["fn"]): return False
+        if not (n1["fn"] == n2["fn"]): return False
         if(len(n1["args"]) is not len(n2["args"])): return False
         for i in range(len(n1["args"])):
             val1= self.find(n1["args"][i]) 
@@ -100,7 +100,6 @@ class CC_DAG:
             return True
         else: 
             return False
-
 
     def solve(self):
         for eq in self.equalities:
