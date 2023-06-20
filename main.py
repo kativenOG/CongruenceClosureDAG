@@ -22,10 +22,14 @@ def main(file="",term=None):
         # Drawing the graph in the CC_DAG object instance
         atom_parser.parse(atoms) 
         solver.complete_ccpar()
+        # Print the DAG before the Congruence Closure Algorithm 
+        solver.visualize_dag(True)
         # Parsing the formulas and transforming them in tuples for the CC algorithm 
         solver.equalities, solver.inequalities = gp.parse_equations(equations,atom_parser.atom_dict) 
         # Running Congruence Closure 
         result = solver.solve() 
+        # Print the DAG after the Congruence Closure Algorithm with dotted edges
+        solver.visualize_dag(has_find=True)
         if result == "SAT": end_result = "SAT" 
 
         # Prints

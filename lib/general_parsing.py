@@ -83,4 +83,5 @@ class parse_atoms:
                 dissected_atom = pyparsing.nestedExpr('(',')').parseString(atom).asList()
                 dissected_atom = dissected_atom[0]
                 self.rec_build(None,dissected_atom)
+            pass
              

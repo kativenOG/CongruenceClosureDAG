@@ -6,7 +6,7 @@
             "request": "launch",
             "program": "${file}",
             "justMyCode": true,
-            "args": ["/home/kativen/universita/automated_reasoning/inputs/mock.smt2"],
+            "args": ["/home/kativen/universita/automated_reasoning/input_seba/input.smt2"],
         }
     ]
 }
