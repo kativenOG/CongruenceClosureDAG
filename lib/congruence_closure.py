@@ -67,9 +67,14 @@ class CC_DAG:
     def union(self,id1,id2):
         n1 = self.NODE(self.find(id1))
         n2 = self.NODE(self.find(id2))
-        n1["mutable_find"]  = copy.copy(n2["mutable_find"])
-        n2["mutable_ccpar"].update(n1["mutable_ccpar"])
-        n1["mutable_ccpar"] = set()
+        if len(n2["mutable_ccpar"]) > len(n1["mutable_ccpar"]):
+            n1["mutable_find"]  = copy.copy(n2["mutable_find"])
+            n2["mutable_ccpar"].update(n1["mutable_ccpar"])
+            n1["mutable_ccpar"] = set()
+        else:
+            n2["mutable_find"]  = copy.copy(n1["mutable_find"])
+            n1["mutable_ccpar"].update(n2["mutable_ccpar"])
+            n2["mutable_ccpar"] = set()
     
     def congruent(self,id1,id2):
         n1 = self.NODE(id1)
@@ -99,6 +104,8 @@ class CC_DAG:
 
     def solve(self):
         for eq in self.equalities:
+            if eq in self.inequalities: # Forbidden List 
+                return "UNSAT (Forbiddend List)"
             val1,val2 =  self.find(eq[0]),self.find(eq[1])
             # print(f"Eq: {eq}")
             self.merge(eq[0],eq[1])
