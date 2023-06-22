@@ -80,7 +80,7 @@ class CC_DAG:
         n1 = self.NODE(id1)
         n2 = self.NODE(id2)
         if not (n1["fn"] == n2["fn"]): return False
-        if(len(n1["args"]) is not len(n2["args"])): return False
+        if not((len(n1["args"]) == len(n2["args"]))): return False
         for i in range(len(n1["args"])):
             val1= self.find(n1["args"][i]) 
             val2= self.find(n2["args"][i]) 
@@ -104,7 +104,7 @@ class CC_DAG:
     def solve(self):
         for eq in self.equalities:
             # Forbidden List  
-            if eq in self.inequalities: return "UNSAT (Forbiddend List)"
+            if (eq in self.inequalities) or (eq[::-1] in self.inequalities): return "UNSAT (Forbiddend List)"
             # Call a merge on every Equality 
             self.merge(eq[0],eq[1])
         for ineq in self.inequalities:
