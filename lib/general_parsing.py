@@ -3,7 +3,6 @@ import pyparsing
 
 def parse_equations(equations,atom_dict):
     equalities,inequalities = [],[]
-    print(equations)
     for eq in equations:
         if eq[0] != "(": eq = "(" + eq + ")"
         if ("!" in eq) and ("=" in eq):

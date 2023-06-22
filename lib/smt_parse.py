@@ -53,6 +53,4 @@ class smt_parser():
             real_formulas = [x for x in real_formulas if x.find("=")!=-1 ]
             cc_dag_instances.append(real_formulas)
 
-        # print(cc_dag_instances) 
-        # exit()
         return cc_dag_instances,list(set(real_atoms)),ground_truth.upper()
