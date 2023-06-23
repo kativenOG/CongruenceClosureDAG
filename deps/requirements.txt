@@ -1,0 +1,7 @@
+pysmt
+matplotlib
+blessed
+pyparsing
+networkx
+gitpython
+pyinstall

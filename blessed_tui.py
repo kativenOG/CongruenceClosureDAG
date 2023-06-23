@@ -4,6 +4,28 @@ from blessed import Terminal
 from git.repo.base import Repo
 from main import main
 
+ascii_art = [ 
+"   ██████╗ ██████╗ ███╗   ██╗ ██████╗ ██████╗ ██╗   ██╗███████╗███╗   ██╗ ██████╗███████╗  ",
+"   ██╔════╝██╔═══██╗████╗  ██║██╔════╝ ██╔══██╗██║   ██║██╔════╝████╗  ██║██╔════╝██╔════╝ ", 
+"   ██║     ██║   ██║██╔██╗ ██║██║  ███╗██████╔╝██║   ██║█████╗  ██╔██╗ ██║██║     █████╗   ", 
+"   ██║     ██║   ██║██║╚██╗██║██║   ██║██╔══██╗██║   ██║██╔══╝  ██║╚██╗██║██║     ██╔══╝   ", 
+"   ╚██████╗╚██████╔╝██║ ╚████║╚██████╔╝██║  ██║╚██████╔╝███████╗██║ ╚████║╚██████╗███████╗ ", 
+"    ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝ ", 
+"", 
+"    ██████╗██╗      ██████╗ ███████╗██╗   ██╗██████╗ ███████╗  ",             
+"   ██╔════╝██║     ██╔═══██╗██╔════╝██║   ██║██╔══██╗██╔════╝  ",             
+"   ██║     ██║     ██║   ██║███████╗██║   ██║██████╔╝█████╗    ",             
+"   ██║     ██║     ██║   ██║╚════██║██║   ██║██╔══██╗██╔══╝    ",             
+"   ╚██████╗███████╗╚██████╔╝███████║╚██████╔╝██║  ██║███████╗  ",             
+"    ╚═════╝╚══════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝  ",             
+"",               
+"    █████╗ ██╗      ██████╗  ██████╗ ██████╗ ██╗████████╗██╗  ██╗███╗   ███╗  ",              
+"   ██╔══██╗██║     ██╔════╝ ██╔═══██╗██╔══██╗██║╚══██╔══╝██║  ██║████╗ ████║  ",              
+"   ███████║██║     ██║  ███╗██║   ██║██████╔╝██║   ██║   ███████║██╔████╔██║  ",              
+"   ██╔══██║██║     ██║   ██║██║   ██║██╔══██╗██║   ██║   ██╔══██║██║╚██╔╝██║  ",                
+"   ██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║  ",             
+"   ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝  ",              
+]
 
 def fs_search(term)->str:
     target_file = ""
@@ -80,6 +102,15 @@ def fs_search(term)->str:
 
 def tui_main():
     term = Terminal()
+    print(term.home + term.clear + term.move_y(term.height//3))
+    for i in range(len(ascii_art)): print(term.center(ascii_art[i]))
+    print("\n" + term.center(term.black_on_cyan2("Press Enter to Continue!")))
+    while True: 
+        x = term.inkey()
+        if x.code == term.KEY_ENTER: break 
+        if x.code == term.KEY_ESCAPE: exit()
+        else: pass
+
     print(term.home + term.clear)
     while True:
         top_y = term.height // 5
@@ -129,9 +160,12 @@ def tui_main():
         
                 case 1: # Download QF_UF Repo 
                     if not os.path.isdir("./inputs"):
-                        print(term.move_xy(0,0) + term.clear_eol + term.center(term.blink("Donwloading the package!")))
-                        Repo.clone_from("https://github.com/kativenOG/ar_inputs.git","./inputs")
-                        print(term.move_xy(0,0) + term.center("Package Downloaded!"))
+                        try:
+                            print(term.move_xy(0,0) + term.clear_eol + term.center(term.blink("Donwloading the package!")))
+                            Repo.clone_from("https://github.com/kativenOG/ar_inputs.git","./inputs")
+                            print(term.move_xy(0,0) + term.center("Package Downloaded!"))
+                        except: 
+                            pass
                     else:
                         print(term.move_xy(0,0) + term.clear_eol + term.center("Package as already been Downloaded!"))
                 case 2: # Use file from repo
