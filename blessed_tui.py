@@ -108,7 +108,7 @@ def tui_main():
     while True: 
         x = term.inkey()
         if x.code == term.KEY_ENTER: break 
-        if x.code == term.KEY_ESCAPE: exit()
+        if x.code == term.KEY_ESCAPE or x.lower() == "q": exit()
         else: pass
 
     print(term.home + term.clear)
